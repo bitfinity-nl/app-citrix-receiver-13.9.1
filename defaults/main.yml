@@ -1,0 +1,19 @@
+---
+  # Title: app-citrix-receiver-13.9.1
+  #
+  # Auhtor: Luc Rutten
+  # Version: 1.0
+  # File: defaults/main.yml
+  #
+  # Description:
+  #   Installation of Citrix Receiver on Ubuntu
+
+
+  resource_url_receiver     : http://172.16.2.20/resource/citrix/receiver/Linux/icaclient_13.9.1.6_amd64.deb
+  resource_url_receiver_web : http://172.16.2.20/resource/citrix/receiver/Linux/icaclientWeb_13.9.1.6_amd64.deb
+  resource_url_receiver_usb : http://172.16.2.20/resource/citrix/receiver/Linux/ctxusb_2.7.6_amd64.deb
+
+  deb_state                 : present
+  deb_receiver              : icaclient_13.9.1.6_amd64.deb
+  deb_receiver_web          : icaclientWeb_13.9.1.6_amd64.deb
+  deb_receiver_usb          : ctxusb_2.7.6_amd64.deb

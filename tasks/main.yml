@@ -1,0 +1,32 @@
+---
+  # Title: app-citrix-receiver-13.9.1
+  #
+  # Auhtor: Luc Rutten
+  # Version: 1.0
+  # File: task/main.yml
+  #
+  # Description:
+  #   Installation of Citrix Receiver on Ubuntu
+
+  - name: "Enable i386 Multiarch"
+    command: dpkg --add-architecture i386
+    when: ansible_architecture != 'i386'
+
+  - name: "Update reposities"
+    apt:
+      update_cache: yes
+
+  - name: "Add SSL Certificates for Citrix receiver"
+    file:
+      src: /usr/share/ca-certificates/mozilla/*
+      dest: /opt/Citrix/ICAClient/keystore/cacerts/
+
+  - name: "Download Files"
+    get_url:
+      src: "{{ item }}"
+      dest: /tmp
+    with_items:
+      - "{{ resource_url_receiver }}"
+      - "{{ resource_url_receiver_web }}"
+      - "{{ resource_url_receiver_usb }}"
+    
