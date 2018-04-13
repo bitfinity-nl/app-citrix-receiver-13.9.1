@@ -16,17 +16,27 @@
     apt:
       update_cache: yes
 
+  - name: "Download Files"
+    get_url:
+      url: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: '{{ resource_url_receiver }}', dest: '/tmp/' }
+      - { src: '{{ resource_url_receiver_web }}', dest: '/tmp/' }
+      - { src: '{{ resource_url_receiver_usb }}', dest: '/tmp/' }
+
+  - name: "Install DEB packages"
+    apt:
+      deb: "{{ item }}"
+      state: "{{ deb_state }}"
+    with_items:
+      - "/tmp/{{ deb_receiver }}"
+      - "/tmp/{{ deb_receiver_web }}"
+      - "/tmp/{{ deb_receiver_usb }}"
+    
   - name: "Add SSL Certificates for Citrix receiver"
     file:
       src: /usr/share/ca-certificates/mozilla/*
       dest: /opt/Citrix/ICAClient/keystore/cacerts/
 
-  - name: "Download Files"
-    get_url:
-      src: "{{ item }}"
-      dest: /tmp
-    with_items:
-      - "{{ resource_url_receiver }}"
-      - "{{ resource_url_receiver_web }}"
-      - "{{ resource_url_receiver_usb }}"
-    
+
