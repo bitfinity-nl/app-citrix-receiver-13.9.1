@@ -1,0 +1,10 @@
+#!/bin/bash
+
+kill -9 $(ps -A | grep selfservice | cut -c2-5)
+kill -9 $(ps -A | grep AuthManagerDaem | cut -c2-5)
+kill -9 $(ps -A | grep ServiceRecord | cut -c2-5)
+
+kill -9 $(ps -A | grep selfservice | cut -c1-5)
+kill -9 $(ps -A | grep AuthManagerDaem | cut -c1-5)
+kill -9 $(ps -A | grep ServiceRecord | cut -c1-5)
+

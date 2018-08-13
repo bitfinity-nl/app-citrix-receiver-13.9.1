@@ -7,6 +7,15 @@
   #
   # Description:
   #   Installation of Citrix Receiver on Ubuntu
+  # 
+  #Note by David omdat er standaard geen firefox geinstalleerd wordt op de endpoints heb ik de SSL certificaten voor de citrix receiver geuncomment. 
+  #  Deze zijn tevens momenteel nog niet benodigd, voor de ICA sessie naar xenapp servers.
+
+
+  - name: "check if citrix receiver is already installed, if not found skipping...."
+    stat:
+      path: /opt/Citrix/ICAClient
+    register: citrix_active
 
   - name: "Enable i386 Multiarch"
     command: dpkg --add-architecture i386
@@ -15,6 +24,7 @@
   - name: "Update reposities"
     apt:
       update_cache: yes
+    when: citrix_active.stat.exists == False
 
   - name: "Download Files"
     get_url:
@@ -24,6 +34,7 @@
       - { src: '{{ resource_url_receiver }}', dest: '/tmp/' }
       - { src: '{{ resource_url_receiver_web }}', dest: '/tmp/' }
       - { src: '{{ resource_url_receiver_usb }}', dest: '/tmp/' }
+    when: citrix_active.stat.exists == False
 
   - name: "Install DEB packages"
     apt:
@@ -33,10 +44,22 @@
       - "/tmp/{{ deb_receiver }}"
       - "/tmp/{{ deb_receiver_web }}"
       - "/tmp/{{ deb_receiver_usb }}"
-    
-  - name: "Add SSL Certificates for Citrix receiver"
-    file:
-      src: /usr/share/ca-certificates/mozilla/*
-      dest: /opt/Citrix/ICAClient/keystore/cacerts/
+    when: citrix_active.stat.exists == False
 
-
+  - name: "load in template citrix store"
+    template:
+      src: StoreCache.ctx.j2
+      dest: /opt/Citrix/ICAClient/config/StoreCache.ctx-template
+  
+  - name: "load in crontab template"
+    template:
+      src: citrixremove.j2
+      dest: /opt/Citrix/citrixremove.sh
+      mode: 0744
+  
+  - name: "create a crontab that runs every 5 minutes 5 0 * * * using the root user, for removing background citrix receiver processes"
+    cron: 
+      name: "remove-background-processes-Citrix"
+      minute: "*/5"
+      user: root
+      job: /opt/Citrix/citrixremove.sh >/dev/null 2>&1

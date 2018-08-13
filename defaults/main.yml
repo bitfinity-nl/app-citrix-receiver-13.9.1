@@ -9,9 +9,9 @@
   #   Installation of Citrix Receiver on Ubuntu
 
 
-  resource_url_receiver     : http://192.168.0.181/resource/citrix/receiver/linux/icaclient_13.9.1.6_amd64.deb
-  resource_url_receiver_web : http://192.168.0.181/resource/citrix/receiver/linux/icaclientWeb_13.9.1.6_amd64.deb
-  resource_url_receiver_usb : http://192.168.0.181/resource/citrix/receiver/linux/ctxusb_2.7.6_amd64.deb
+  resource_url_receiver     : http://172.16.2.20/resource/citrix/receiver/Linux/icaclient_13.9.1.6_amd64.deb 
+  resource_url_receiver_web : http://172.16.2.20/resource/citrix/receiver/Linux/icaclientWeb_13.9.1.6_amd64.deb 
+  resource_url_receiver_usb : http://172.16.2.20/resource/citrix/receiver/Linux/ctxusb_2.7.6_amd64.deb 
 
   deb_state                 : present
   deb_receiver              : icaclient_13.9.1.6_amd64.deb
