@@ -1,0 +1,24 @@
+---
+  # Title: Add additional certificates
+  #
+  # Author: Luc Rutten
+  # File: tasks/ubt-1804-add-ssl-certificates.yml
+  #
+  # Description: 
+  #   fix
+  #
+
+  - name: "Check if keystore exists"
+    stat:
+      path: /opt/Citrix/ICAClient/keystore/cacerts/Secure_Global_CA.crt
+    register: ctx_keystore
+
+  - name: "Create symlink /usr/share/ca-certificates/mozilla/* /opt/Citrix/ICAClient/keystore/cacerts"
+    raw: "ln -s /usr/share/ca-certificates/mozilla/* /opt/Citrix/ICAClient/keystore/cacerts/"
+    when: 
+      - ctx_keystore.stat.exists == false
+
+  - name: "Rehash /opt/Citrix/ICAClient/keystore/cacerts/"
+    raw: "c_rehash /opt/Citrix/ICAClient/keystore/cacerts/"
+    when:
+      - ctx_keystore.stat.exists == false
